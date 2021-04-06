@@ -1672,26 +1672,6 @@ public final class TokenTypes {
     /**
      * A right curly brace (<code>}</code>).
      *
-     * <p>For example:</p>
-     * <pre>
-     * {@code
-     * void foo(){}
-     * }
-     * </pre>
-     * <p>parses as:</p>
-     * <pre>
-     * METHOD_DEF -&gt; METHOD_DEF
-     *  |--MODIFIERS -&gt; MODIFIERS
-     *  |--TYPE -&gt; TYPE
-     *  |   `--LITERAL_VOID -&gt; void
-     *  |--IDENT -&gt; foo
-     *  |--LPAREN -&gt; (
-     *  |--PARAMETERS -&gt; PARAMETERS
-     *  |--RPAREN -&gt; )
-     *  `--SLIST -&gt; {
-     *      `--RCURLY -&gt; }
-     * </pre>
-     *
      * @see #OBJBLOCK
      * @see #ARRAY_INIT
      * @see #SLIST
@@ -2972,6 +2952,21 @@ public final class TokenTypes {
     /**
      * The {@code >} (greater than) operator.
      *
+     * <p>For example:</p>
+     * <pre>
+     * c=a>b;
+     * </pre>
+     * <p>parses as:</p>
+     * <pre>
+     * |--EXPR -&gt; EXPR
+     * |   `--ASSIGN -&gt; =
+     * |       |--IDENT -&gt; c
+     * |       `--BAND -&gt; &gt;
+     * |           |--IDENT -&gt; a
+     * |           `--IDENT -&gt; b
+     * |--SEMI -&gt; ;
+     * </pre>
+     *
      * @see #EXPR
      **/
     public static final int GT = GeneratedJavaTokenTypes.GT;
@@ -3994,23 +3989,20 @@ public final class TokenTypes {
      * member value pair.
      *
      * <p>For example:</p>
+     *
      * <pre>
-     * &#64;Annotation({1, 2})
+     *     { 1, 2 }
      * </pre>
+     *
      * <p>parses as:</p>
+     *
      * <pre>
-     * ANNOTATION -&gt; ANNOTATION
-     *  |--AT -&gt; &#64;
-     *  |--IDENT -&gt; Annotation
-     *  |--LPAREN -&gt; (
-     *  |--ANNOTATION_ARRAY_INIT -&gt; {
-     *  |   |--EXPR -&gt; EXPR
-     *  |   |   `--NUM_INT -&gt; 1
-     *  |   |--COMMA -&gt; ,
-     *  |   |--EXPR -&gt; EXPR
-     *  |   |   `--NUM_INT -&gt; 2
-     *  |   `--RCURLY -&gt; }
-     *  `--RPAREN -&gt; )
+     * +--ANNOTATION_ARRAY_INIT ({)
+     *     |
+     *     +--NUM_INT (1)
+     *     +--COMMA (,)
+     *     +--NUM_INT (2)
+     *     +--RCURLY (})
      * </pre>
      *
      * @see <a href="https://www.jcp.org/en/jsr/detail?id=201">
